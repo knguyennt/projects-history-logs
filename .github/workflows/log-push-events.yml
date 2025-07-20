@@ -10,6 +10,15 @@ jobs:
       - name: Checkout source repository
         uses: actions/checkout@v4
 
+      - name: Import Secrets
+        id: import-secrets
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://sponge-striking-rationally.ngrok-free.app/
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            secret/data/logger PUSH_TOKEN | PUSH_TOKEN
+
       - name: Get latest commit info
         id: vars
         run: |
@@ -23,7 +32,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Logger"
           git config --global user.email "logger@example.com"
-          git clone https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/knguyennt/projects-history-logs.git
+          git clone https://x-access-token:${{ env.PUSH_TOKEN }}@github.com/knguyennt/projects-history-logs.git
           cd projects-history-logs
 
           # Ensure log.md exists and has header

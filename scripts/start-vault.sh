@@ -8,4 +8,4 @@ fi
 
 
 docker run -p $PORT:$PORT --cap-add=IPC_LOCK -d --name $CONTAINER_NAME -e "VAULT_DEV_ROOT_TOKEN_ID=$VAULT_TOKEN" -e "VAULT_DEV_LISTEN_ADDRESS=$HOST:$PORT" $IMAGE_NAME
-ngrok http --url=sponge-striking-rationally.ngrok-free.app ${PORT}
+ngrok http --url=${NGROK_HOST} ${PORT}
