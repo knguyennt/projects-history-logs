@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
       - name: Get latest commit info
         id: vars
         run: |
@@ -14,6 +17,7 @@ jobs:
           echo "DATE=$(date -u +"%Y-%m-%d %H:%M UTC")" >> $GITHUB_ENV
           echo "COMMIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
           echo "COMMIT_URL=https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s' || echo 'No message')" >> $GITHUB_ENV
 
       - name: Clone central logging repo
         run: |
@@ -21,9 +25,6 @@ jobs:
           git config --global user.email "logger@example.com"
           git clone https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/knguyennt/projects-history-logs.git
           cd projects-history-logs
-
-          # Get commit message
-          COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s" $COMMIT_SHA || echo "No message")
 
           # Ensure log.md exists and has header
           if [ ! -f log.md ]; then
